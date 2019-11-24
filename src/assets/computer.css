@@ -1,0 +1,63 @@
+.app-head *{
+  float:left;
+  margin-left:10px;
+  overflow: hidden;
+  cursor:pointer;
+  float:left;
+}
+.app-head img{
+  width:100px;
+  height:70px;
+  margin:10px 10px;
+}
+.app-head .head-nav{
+  display: inline;
+}
+.app-head {
+  background: #363636;
+  color: #b2b2b2;
+  height: 90px;
+  line-height: 90px;
+  width: 100%;
+  display:inline;
+  float:left;
+  font-size:18px;
+}
+.menu .el-icon-s-operation{
+  font-size:50px;
+  font-weight: bold;
+  float:right;
+  margin:15px;
+
+}
+
+@media only screen and (max-width: 878px) {
+  .nav img {
+    display: inline;
+  }
+  .nav ul {
+    position: absolute;
+    right: 0;
+    text-align: right;
+    top: 78px;
+    display: none;
+  }
+  .nav ul li {
+    display: block;
+    border: 1px solid #dadada;
+    height: 58px;
+    line-height: 58px;
+    width: 98px;
+  }
+  .nav ul li a {
+    display: block;
+    padding-bottom: 0;
+  }
+  .nav ul li .actived {
+    border-bottom: none;
+  }
+  .nav ul li a:hover {
+    background-color: #6E6E6E;
+    color: #fff;
+  }
+}

@@ -1,0 +1,82 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.nav {
+  position: relative;
+  background-color: #fff;
+  height: 78px;
+  width: 100%;
+  border-bottom: 1px solid #DADADA;
+}
+
+.nav img {
+  position: absolute;
+  right: 20px;
+  top: 30px;
+  width: 28px;
+  display: none;
+}
+
+.nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.nav ul li {
+  height: 78px;
+  width: 168px;
+  line-height: 78px;
+  text-align: center;
+  display: inline-block;
+}
+
+.nav ul li:hover {
+  cursor: pointer;
+}
+
+.nav ul li a {
+  text-decoration: none;
+  color: #666;
+  padding-bottom: 8px;
+}
+
+.nav ul li .actived {
+  border-bottom: 3px solid #EE5C42;
+}
+/*媒体查询*/
+/*屏幕宽度小于878px的时候执行里面的css*/
+
+@media only screen and (max-width: 878px) {
+  .nav img {
+    display: inline;
+  }
+  .nav ul {
+    position: absolute;
+    right: 0;
+    text-align: right;
+    top: 78px;
+    display: none;
+  }
+  .nav ul li {
+    display: block;
+    border: 1px solid #dadada;
+    height: 58px;
+    line-height: 58px;
+    width: 98px;
+  }
+  .nav ul li a {
+    display: block;
+    padding-bottom: 0;
+  }
+  .nav ul li .actived {
+    border-bottom: none;
+  }
+  .nav ul li a:hover {
+    background-color: #6E6E6E;
+    color: #fff;
+  }
+}
