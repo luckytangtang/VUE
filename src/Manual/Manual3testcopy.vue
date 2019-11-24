@@ -184,11 +184,11 @@
             var h=vnode.context.by-y;
             el.style.width = 100+w+'px';
             el.style.height = 100+h+'px';
-            console.log(el.style.width+"kkdkd"+el.style.height)
+            console.log(el.style.width+"ppppppteekkke"+el.style.height)
            vnode.context.flag=false;
           }
           document.onmouseup = function () {
-            document.onmousemove = document.onmouseup = null;
+            document.onmousemove = document.onmouseup =null;
           }
 
         }
@@ -196,6 +196,8 @@
     },
     mounted () {
       this.url=`../static/pdf/web/viewer.html?file=/static/FifthLanuage.pdf`;
+      this.url=".../http://pdf/web"
+
     }
 
   }
