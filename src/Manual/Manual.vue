@@ -52,7 +52,6 @@
   .el-form-item {
     width: 100%;
   }
-
   .demo-table-expand .el-form-item {
     margin-right: 0;
     margin-bottom: 0;
@@ -117,7 +116,7 @@
       var canvas = document.createElement('canvas'); //canvas
       canvasList.appendChild(canvas);
       canvas.width = 1000; //☜
-      canvas.height = 500;
+      canvas.height = 300;
       canvas.style.backgroundColor = '#eeeeee';
       var context = canvas.getContext('2d');  //获取画布对象
       context.fillStyle = "#EEEEFF";  //对画布填充颜色

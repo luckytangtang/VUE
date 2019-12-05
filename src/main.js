@@ -18,6 +18,7 @@ import apiUrl from  "@/components/Global.vue"
 import Manual from '@/Manual/Manual'
 import Manual3test from '@/Manual/Manual3test'
 import Manualtt from '@/Manual/Manualtt'
+import Manual3testcopy from '@/Manual/Manual3testcopy'
 Vue.prototype.apiUrl=apiUrl.apiUrl;
 require('./mock')
 Vue.use(ElementUI, {locale})
@@ -52,7 +53,7 @@ const router = new VueRouter({
     },
     {
       path:'/ltt',
-      component:Manualtt
+      component:Manual3testcopy
     },
     {
       //论文管理

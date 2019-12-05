@@ -18,6 +18,7 @@
     "element-ui": "^2.10.1",
     "jquery": "^2.2.1",
     "mockjs": "^1.0.1-beta3",
+    "pdfjs-dist": "^2.2.228",
     "pdfobject": "^2.1.1",
     "qs": "^6.7.0",
     "ui": "^0.2.4",

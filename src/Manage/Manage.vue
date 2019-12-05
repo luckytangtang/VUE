@@ -225,7 +225,7 @@
         var data={docId:id,username:username}
         console.log(id)
         console.log(username)
-       this.$router.push({path:"/manual",query:{docId:id,username:username}})
+       this.$router.push({path:"/ltt",query:{docId:id,username:username}})
       //  parent.location.href=url+"?docId="+id+"&username="+username
       },
       deleteRow(id) {
