@@ -16,7 +16,7 @@
   "dependencies": {
     "axios": "^0.19.0",
     "element-ui": "^2.10.1",
-    "jquery": "^2.2.1",
+    "jquery": "^3.4.0",
     "mockjs": "^1.0.1-beta3",
     "pdfjs-dist": "^2.2.228",
     "pdfobject": "^2.1.1",
