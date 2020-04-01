@@ -172,8 +172,9 @@
         }).then((res)=> {
         const documentList = res.data.data;
         this.total=documentList.length;
+        var len=this.total>this.pageSize?this.pageSize:this.total;
         window.sessionStorage.setItem("documentList",JSON.stringify(documentList));
-        for( var i=0;i<this.pageSize;i++){
+        for( var i=0;i<len;i++){
           console.log(documentList[i])
           this.listData.push(documentList[i])
         }
