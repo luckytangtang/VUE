@@ -60,13 +60,34 @@
             删除
           </el-button>
         </template>
-        >
       </el-table-column>
     </el-table>
+
+    <div class="paginationClass">
+      <el-pagination
+        @size-change="handleSizeChange"
+        background
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[5, 8, 10, 15]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total">
+      </el-pagination>
+    </div>
+    <Loading v-if="isloading"></Loading>
   </div>
 
 </template>
 <style scoped>
+
+  .paginationClass{
+    width:100%;
+    height: 50px;
+    position:relative;
+    bottom: 0px;
+    align-content: center;
+  }
 
   .el-table_expanded-cell {
     padding: 5px;
@@ -118,56 +139,20 @@
 </style>
 <script>
   import Header from '@/components/Header'
+  import Loading from "@/components/Loading"
   import axios from 'axios';
   import qs from  'Qs';
   export default {
     name: 'Manage',
-    components: {Header},
+    components: {Header,Loading},
     inject:['reload'],
     data () {
       return {
+        isloading:false,
         listData:[],
-        tableData: [{
-          name: 'Abstractive Cross-Language Summarization via\n' +
-            'Translation Model Enhanced Predicate Argument',
-          author: 'Smith',
-          status: '已下载',
-          pageNum: '9',
-          mess1: '其它信息1....',
-          mess2: '其它信息2....',
-          mess3: '其它信息3....',
-          address: '9',
-        }, {
-          name: 'Abstractive Cross-Language Summarization via\n' +
-            'Translation Model Enhanced Predicate Argument',
-          author: 'Smith',
-          status: '已下载',
-          pageNum: '9',
-          mess1: '其它信息1....',
-          mess2: '其它信息2....',
-          mess3: '其它信息3....',
-          address: '9',
-        }, {
-          name: 'Abstractive Cross-Language Summarization via\n' +
-            'Translation Model Enhanced Predicate Argument',
-          author: 'Smith',
-          status: '已下载',
-          pageNum: '9',
-          mess1: '其它信息1....',
-          mess2: '其它信息2....',
-          mess3: '其它信息3....',
-          address: '9',
-        }, {
-          name: 'Abstractive Cross-Language Summarization via\n' +
-            'Translation Model Enhanced Predicate Argument',
-          author: 'Smith',
-          status: '已下载',
-          pageNum: '9',
-          mess1: '其它信息1....',
-          mess2: '其它信息2....',
-          mess3: '其它信息3....',
-          address: '9',
-        }]
+        currentPage:1,
+        total:1,
+        pageSize:5
       }
     },
     beforeCreate () {
@@ -179,18 +164,19 @@
       var userId=window.sessionStorage.getItem("userId")
       var token=window.sessionStorage.getItem("token")
       var param={userId:userId,pageIndex:1,pageSize:6,username:username}
-      axios.post(this.apiUrl+"/document/getList",qs.stringify(param),
+      axios.post(this.apiUrl+"/document/getALlDocuments",qs.stringify(param),
         {
           headers: {
             'token': token
           }
         }).then((res)=> {
         const documentList = res.data.data;
-        console.log(123)
-        console.log(JSON.stringify(documentList));
-        console.log(res.data.code)
-        console.log(res.data.serviceCode)
-        this.listData=documentList;
+        this.total=documentList.length;
+        window.sessionStorage.setItem("documentList",JSON.stringify(documentList));
+        for( var i=0;i<this.pageSize;i++){
+          console.log(documentList[i])
+          this.listData.push(documentList[i])
+        }
         console.log(this.listData);
       }).catch(error=>{
         console.log(error);
@@ -200,33 +186,99 @@
 
     },
     methods:{
+      handleCurrentChange(currentPage){
+        this.currentPage = currentPage;
+        console.log(this.currentPage)  //点击第几页
+        this.listData=[]
+        var document=window.sessionStorage.getItem("documentList")
+        console.log(document)
+        var documentList=JSON.parse(document)
+        var len=(this.currentPage-1)*this.pageSize+this.pageSize>this.total?this.total:(this.currentPage-1)*this.pageSize+this.pageSize
+        for(var i=(this.currentPage-1)*this.pageSize;i<len;i++)
+          this.listData.push(documentList[i])
+        console.log(this.listData)
+
+      },
+      handleSizeChange(pageSize){
+        this.pageSize=pageSize
+        this.handleCurrentChange(this.currentPage)
+
+      },
       downloadRow(id){
         console.log(id);
         var url=this.apiUrl+'/commonFile/getPdfFile';
         var username=window.sessionStorage.getItem("username")
         var token=window.sessionStorage.getItem("token")
         var data={docId:id,username:username}
-        // http://xxxx/url>?p1=xx&p2=xxx
         window.location.href=url+"?docId="+id+"&username="+username
-     //   window.open(url+"?docId="+id+"&username="+username)
-        /*axios.get(url+"?docId="+id+"&username="+username
-       ).then((res)=>{
-            console.log(res.data)
-           // console.log(res.data)
-         //   this.download(res.data)
-        }).catch(error=>{
-          console.log(error);
-        });*/
+      },
+      analysisRow(id){
+        var url=this.apiUrl+'/commonFile/getResetHtml'
+        this.$router.push({path:"/any",query:{docId:id,username:username}})
+
+        var username=window.sessionStorage.getItem("username")
+        var token=window.sessionStorage.getItem("token")
+        var data={docId:1,username:username,pageId:1,pageIndex:1}
+        //  parent.location.href=url+"?docId="+1+"&pageId="+1+"&pageIndex="+1
+
       },
       readerRow(id){
-      //  var url=this.apiUrl+'/commonFile/getFileStream';
+        this.isloading=true;
+        var _this=this;
+        var status=0;//用这个判断是否解析成功
         var username=window.sessionStorage.getItem("username")
-     //   var token=window.sessionStorage.getItem("token")
-    //    var data={docId:id,username:username}
-    //    console.log(id)
-      //  console.log(username)
-       this.$router.push({path:"/ltt",query:{docId:id,username:username}})
-      //  parent.location.href=url+"?docId="+id+"&username="+username
+        var token=window.sessionStorage.getItem("token")
+        var statusurl=this.apiUrl+"/task/getTaskStatus"
+        var params={docId:id,username:username}
+        var timer= window.setInterval(function () {
+          axios.post(statusurl,qs.stringify(params),
+            {
+              headers:{
+                token:token
+              }
+            }
+          ).then(res=>{
+            var data=res.data.data.status;
+            var task=res.data.data
+            if(data==6)
+            {
+              clearInterval(timer)
+              status=data
+              console.log(status)
+
+            }
+            else if(data==4){
+              clearInterval(timer)
+              status=data
+            }
+            console.log("跳出")
+            if(status==6) {
+              console.log("开始获得CSS")
+              var url = "http://148.70.210.242:8080"+ "/commonFile/getCssFile";
+              console.log(url)
+              axios.get(url + "?docId=" + id + "&username=" + username
+              ).then((res) => {
+                console.log(res.data)
+                sessionStorage.setItem("pdfCss", res.data)
+                window.sessionStorage.setItem("docId", id)
+                _this.isloading=false
+                _this.$router.push({path: "/ltt", query: {docId: id, username: username}})
+              }).catch(error => {
+                console.log(error);
+                window.sessionStorage.setItem("docId", id)
+                _this.isloading=false
+                _this.$router.push({path: "/ltt", query: {docId: id, username: username}})
+              });
+            }
+            else if(status==4){
+              alert("解析失败,失败的原因："+res.data.data.errorInfo)
+              _this.isloading=false;
+            }
+          })
+        }, 2000);
+
+        /*  */
+        //  parent.location.href=url+"?docId="+id+"&username="+username
       },
       deleteRow(id) {
         console.log(id);
@@ -242,11 +294,11 @@
             headers: {
               'token': token
             }
-        }).then((res) => {
+          }).then((res) => {
           console.log(2445)
           if(res.data.code==200){
             console.log(3445566)
-            this.$router.go(0);
+            this.$router.go(0);//重新刷新
             //    this.reload();
           }else{
             console.log(res.data.message)
@@ -267,7 +319,7 @@
         console.log(blob)
         var  url = window.URL.createObjectURL(blob);
         var  link = document.createElement('a')
-       link.style.display = 'none'
+        link.style.display = 'none'
         link.href = url
         link.setAttribute('download', 'jack.pdf')
         document.body.appendChild(link)

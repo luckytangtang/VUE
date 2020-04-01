@@ -12,11 +12,10 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
     },
-
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOSTf
-    port: 70, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
-    autoOpenBrowser: false,
+    port: process.env.PORT||70, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    autoOpenBrowser:true,
     errorOverlay: true,
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
@@ -57,7 +56,7 @@ module.exports = {
      * Source Maps
      */
 
-    productionSourceMap: true,
+    productionSourceMap:false,
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
 

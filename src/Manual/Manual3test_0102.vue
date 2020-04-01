@@ -3,7 +3,11 @@
     <div v-for="i  in objectList.length">
       <div  v-drag="{index:i-1}" :style="styleObj[i-1]" class="drag">
         <div v-cdrag="{index:i-1}"class="cdrag"></div>
-        <div class="index">{{i-1}}</div>
+        <div class="index">
+          <el-button type="success" style="height: 20px;width: 20px" @click="handelBlock(i)">
+            <div class="order">{{i-1}}</div>
+          </el-button>
+        </div>
         <div  v-rdrag="{index:i-1}" class="rdrag"></div>
         <div v-fdrag="{index:i-1}" class="fdrag"></div>
         <div v-kdrag="{index:i-1}" class="kdrag"></div>
@@ -12,6 +16,9 @@
     <div class="el-backtop" style="right: 100px; bottom: 150px;">
       <i class="el-icon-circle-plus" @click="handelAddIcon">
       </i>
+    </div>
+    <div class="readerButton">
+      <el-button type="success"round  @click="readerResult">预览效果</el-button>
     </div>
     <div class="successButton">
       <el-button type="success"round  @click="successButton">提交</el-button>
@@ -23,11 +30,14 @@
 </template>
 <style scoped>
   .successButton{
-    position: absolute;
-    top:90%;
-    right: 15%;
-
-
+    position: fixed;
+    top:92%;
+    right: 10%;
+  }
+  .readerButton{
+    position: fixed;
+    top:4%;
+    right: 10%;
   }
   .drag{
     width: 100px;
@@ -41,11 +51,20 @@
   .index{
     left: 50%;
     position: relative;
-    color: red;
     top: -20px;
     opacity: 1;
     font-weight:bold ;
+  }
+  .order{
+    left: 50%;
+    position: relative;
+    align-content: center;
 
+  }
+  .openReader{
+    left: 50%;
+    position: relative;
+    top: -30px;
   }
   .rdrag{
     width:20px;
@@ -118,28 +137,117 @@
 </style>
 <script>
   import Header from '@/components/Header'
+  import axios from 'axios';
+  import qs from  'Qs';
   export default {
     name: 'Canvas',
     components: {Header},
-    props:{
-      objectList:Array
-    },
     data(){
       return {
-        styleObj:[{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'}
-        ],
+        objectList:[],
+        styleObj:[{width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'},
+          {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'}],
         url:'',
         len:'',
         screenWidth:''
       }
+    },
+    props:{
+      num:Number
     },
     methods:{
       successButton(){
         alert("确定提交吗")
         console.log(this.objectList)
       },
+      handelBlock(i){
+        console.log(i)
+        var username=window.sessionStorage.getItem("username")
+        var token=window.sessionStorage.getItem("token")
+        var pageIndex=this.num+''
+        var docId=window.sessionStorage.getItem("docId")
+        var url=this.apiUrl+'/pdfPage/getPdfPage'
+        var params={docId:docId,username:username,pageIndex:pageIndex}
+        axios.post(url,qs.stringify(params),{
+          headers:{
+            'token':token
+          }
+        }).then((res)=>{
+          console.log(res.data)
+          console.log(res.data.data.id)    //这里获得了PageId
+          var pageId=res.data.data.id+''
+          console.log("你好啊" )
+          this.$router.push({path:"/scroll",query:{docId:docId,username:username,pageId:pageId,pageIndex:pageIndex,blockOrder:i}})
+        })
+      },
       handelAddIcon(){
-        this.objectList.push({ x:'',y:'',
+        this.objectList.push({
           bx:200,by:50,
           rx:400,ry:50, //右上角坐标
           lx:200,ly:250, //左下角坐标
@@ -148,28 +256,167 @@
           Height:200,   //正方形区域高的初始大小
           Width:200,   //正方形区域宽的初始大小
           point:''})
+      },
+      readerResult(){
+        var docId=window.sessionStorage.getItem("docId")
+        console.log(this.num)
+        var username=window.sessionStorage.getItem("username")
+        var token=window.sessionStorage.getItem("token")
+        var pageIndex=this.num+''
+        var url=this.apiUrl+'/pdfPage/getPdfPage'
+        var params={docId:docId,username:username,pageIndex:pageIndex}
+        axios.post(url,qs.stringify(params),{
+          headers:{
+            'token':token
+          }
+        }).then((res)=>{
+          console.log(res.data)
+          console.log(res.data.data.id)    //这里获得了PageId
+          var pageId=res.data.data.id+''
+          this.$router.push({path:"/scroll",query:{docId:docId,username:username,pageId:pageId,pageIndex:pageIndex}})
+        })
       }
     },
     computed:{
     },
-    beforeMount(){
-      this.len=this.objectList.length;
-      console.log("beforeMount")
-      this.screenWidth=document.body.offsetWidth;
-      var tempwidth=(this.screenWidth-612-17)/2.0
-      console.log(tempwidth)
-      for(var i=0;i<this.len;i++){
-        this.objectList[i].Height=this.objectList[i].ky-this.objectList[i].by
-        this.objectList[i].Width=this.objectList[i].kx-this.objectList[i].bx
-        this.objectList[i].bx=this.objectList[i].bx+tempwidth
-        this.objectList[i].rx=this.objectList[i].rx+tempwidth
-        this.objectList[i].lx=this.objectList[i].lx+tempwidth
-        this.objectList[i].kx=this.objectList[i].kx+tempwidth
-        this.styleObj[i].width=this.objectList[i].rx-this.objectList[i].bx +'px'
-        this.styleObj[i].height=this.objectList[i].ly-this.objectList[i].by+'px'
-        this.styleObj[i].left=this.objectList[i].bx+'px'
-        this.styleObj[i].top=this.objectList[i].by+'px'
+    watch:{
+      num(oldValue,newValue){
+        console.log(oldValue+ "sss"+newValue)
+        var docId=window.sessionStorage.getItem("docId")
+        var username=window.sessionStorage.getItem("username")
+        let url=this.apiUrl+"/pdfBlocks/getBlocks";
+        var token=window.sessionStorage.getItem("token")
+        var params={docId:docId,username:username,pageIndex:oldValue,pageSize:18}
+        axios.post(url,qs.stringify(params),{
+          headers: {
+            'token': token
+          }
+        }).then((res)=>{
+          console.log(res.data.data)
+          console.log(9999999)
+          const datalist=res.data.data;
+          window.sessionStorage.setItem("datalist",datalist)
+          this.objectList.splice(0,this.objectList.length)
+          for(var i=0;i<datalist.length;i++){
+            const object={
+              bx:datalist[i].x1,by:datalist[i].y1,
+              kx:datalist[i].x2,ky:datalist[i].y2
+              ,rx:datalist[i].x2,ry:datalist[i].y1,
+              lx:datalist[i].x1,ly:datalist[i].y2,flag:false,
+              Height:'',Width:'',point:''}
+            this.objectList.push(object)
+          }
+          this.len=this.objectList.length;
+          console.log(this.objectList.length)
+          this.screenWidth=document.body.offsetWidth;
+          console.log(this.screenWidth)
+          if(this.screenWidth<612){
+            var ratio=(this.screenWidth-17)/612.0;
+            console.log(ratio)
+            for(let i=0; i<this.len; i++){
+              this.objectList[i].Height=this.objectList[i].ky-this.objectList[i].by
+              this.objectList[i].Width=(this.objectList[i].kx-this.objectList[i].bx)
+              this.objectList[i].bx=this.objectList[i].bx
+              this.objectList[i].rx=this.objectList[i].rx
+              this.objectList[i].lx=this.objectList[i].lx
+              this.objectList[i].kx=this.objectList[i].kx
+              this.styleObj[i].width=this.objectList[i].rx-this.objectList[i].bx +'px'
+              this.styleObj[i].height=this.objectList[i].ly-this.objectList[i].by+'px'
+              this.styleObj[i].left=this.objectList[i].bx+'px'
+              this.styleObj[i].top=this.objectList[i].by+'px'
+            }
+          }
+          else {
+            var tempwidth = (this.screenWidth - 612) / 2.0
+            console.log(tempwidth)
+            for (let i = 0; i < this.len; i++) {
+              this.objectList[i].Height = this.objectList[i].ky - this.objectList[i].by
+              this.objectList[i].Width = this.objectList[i].kx - this.objectList[i].bx
+              this.objectList[i].bx = this.objectList[i].bx + tempwidth
+              this.objectList[i].rx = this.objectList[i].rx + tempwidth
+              this.objectList[i].lx = this.objectList[i].lx + tempwidth
+              this.objectList[i].kx = this.objectList[i].kx + tempwidth
+              this.styleObj[i].width = this.objectList[i].rx - this.objectList[i].bx + 'px'
+              this.styleObj[i].height = this.objectList[i].ly - this.objectList[i].by + 'px'
+              this.styleObj[i].left = this.objectList[i].bx + 'px'
+              this.styleObj[i].top = this.objectList[i].by + 'px'
+            }
+            console.log(this.objectList)
+          }
+        }).catch(
+          (error)=>{
+            console.log(error)
+          }
+        )
       }
+    },
+    beforeMount(){
+      var docId=window.sessionStorage.getItem("docId")
+      var username=window.sessionStorage.getItem("username")
+      let url=this.apiUrl+"/pdfBlocks/getBlocks";
+      var token=window.sessionStorage.getItem("token")
+      console.log(this.num)
+      var params={docId:docId,username:username,pageIndex:this.num,pageSize:16}
+      axios.post(url,qs.stringify(params),{
+        headers: {
+          'token': token
+        }
+      }).then((res)=>{
+        console.log(res.data.data)
+        const datalist=res.data.data;
+        window.sessionStorage.setItem("datalist",datalist)
+        for(var i=0;i<datalist.length;i++){
+          const object={
+            bx:datalist[i].x1,by:datalist[i].y1,
+            kx:datalist[i].x2,ky:datalist[i].y2
+            ,rx:datalist[i].x2,ry:datalist[i].y1,
+            lx:datalist[i].x1,ly:datalist[i].y2,flag:false,
+            Height:'',Width:'',point:''}
+          this.objectList.push(object)
+        }
+        this.len=this.objectList.length;
+        console.log(this.objectList.length)
+        this.screenWidth=document.body.offsetWidth;
+        console.log(this.screenWidth)
+        if(this.screenWidth<629){
+          var ratio=(this.screenWidth-17)/612.0;
+          console.log(ratio)
+          for(let i=0; i<this.len; i++){
+            this.objectList[i].Height=this.objectList[i].ky-this.objectList[i].by
+            this.objectList[i].Width=(this.objectList[i].kx-this.objectList[i].bx)
+            this.objectList[i].bx=this.objectList[i].bx
+            this.objectList[i].rx=this.objectList[i].rx
+            this.objectList[i].lx=this.objectList[i].lx
+            this.objectList[i].kx=this.objectList[i].kx
+            this.styleObj[i].width=this.objectList[i].rx-this.objectList[i].bx +'px'
+            this.styleObj[i].height=this.objectList[i].ly-this.objectList[i].by+'px'
+            this.styleObj[i].left=this.objectList[i].bx+'px'
+            this.styleObj[i].top=this.objectList[i].by+'px'
+          }
+        }
+        else {
+          var tempwidth = (this.screenWidth - 612 - 17) / 2.0
+          console.log(tempwidth)
+          for (let i = 0; i < this.len; i++) {
+            this.objectList[i].Height = this.objectList[i].ky - this.objectList[i].by
+            this.objectList[i].Width = this.objectList[i].kx - this.objectList[i].bx
+            this.objectList[i].bx = this.objectList[i].bx + tempwidth
+            this.objectList[i].rx = this.objectList[i].rx + tempwidth
+            this.objectList[i].lx = this.objectList[i].lx + tempwidth
+            this.objectList[i].kx = this.objectList[i].kx + tempwidth
+            this.styleObj[i].width = this.objectList[i].rx - this.objectList[i].bx + 'px'
+            this.styleObj[i].height = this.objectList[i].ly - this.objectList[i].by + 'px'
+            this.styleObj[i].left = this.objectList[i].bx + 'px'
+            this.styleObj[i].top = this.objectList[i].by + 'px'
+          }
+        }
+        console.log(this.objectList)
+      }).catch(
+        (error)=>{
+          console.log(error)
+        }
+      )
+
     },
     directives:{
       cdrag(el,binding,vnode){

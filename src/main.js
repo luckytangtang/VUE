@@ -1,5 +1,3 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import User from '@/User/User'
@@ -7,7 +5,7 @@ import IndexPage from '@/Main/IndexPage'
 import Manage from '@/Manage/Manage'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import locale from 'element-ui/lib/locale/lang/en'
+import locale from 'element-ui/lib/locale/lang/zh-CN'
 import Layout from '@/components/layout'
 import loginPage from '@/User/loginPage'
 import regPage from '@/User/regPage'
@@ -20,6 +18,8 @@ import Manual3test from '@/Manual/Manual3test'
 import Manual3testcopy from '@/Manual/Manual3testcopy'
 import Manual3test_1216 from '@/Manual/Manual3test_1216'
 import Manual3test_0102 from '@/Manual/Manual3test_0102'
+import AnalysisTest from '@/Manual/AnalysisTest'
+import ScrollTest from '@/Manual/ScrollTest'
 Vue.prototype.apiUrl=apiUrl.apiUrl;
 require('./mock')
 Vue.use(ElementUI, {locale})
@@ -28,7 +28,8 @@ Vue.config.productionTip = false
 
 
 const router = new VueRouter({
-  mode: 'history',
+// mode: 'history',
+  base:'/dist',
   routes: [
     {
       //首页
@@ -51,6 +52,14 @@ const router = new VueRouter({
     {
       path:'/tpf',
       component:Manual3test
+    },
+    {
+      path:'/scroll',
+      component:ScrollTest
+    },
+    {
+      path:'/any',
+      component:AnalysisTest
     },
     {
       path:'/ltt',
@@ -134,27 +143,6 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
-// router.beforeEach((to, from, next) => {
-//   if (to.matched.some(record => record.meta.requireAuth)){ // 判断该路由是否需要登录权限
-//     console.log("需要")
-//     if (sessionStorage.getItem("loginuser")) { // 判断当前的token是否存在
-//       console.log("存在")
-//       next();
-//     }
-//     else {
-//       console.log("跳转至LOGIN")
-//       next({
-//         path: '/login',
-//         query: {redirect: to.fullPath} // 将跳转的路由path作为参数，登录成功后跳转到该路由
-//       })
-//     }
-//   }
-//   else {
-//     console.log("不需要登录权限")
-//     next();
-//   }
-// });
-/* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
