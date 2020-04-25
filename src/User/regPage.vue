@@ -20,7 +20,7 @@
       <el-input type="text" v-model="ruleForm2.email" auto-complete="off" placeholder="邮箱"></el-input>
     </el-form-item>
     <el-form-item prop="birthday">
-      <el-input type="text" v-model="ruleForm2.birthday" auto-complete="off" placeholder="生日"></el-input>
+      <el-input type="text" v-model="ruleForm2.birthday" auto-complete="off" placeholder="生日(19960308)"></el-input>
     </el-form-item>
     <el-form-item prop="gender">
       <el-radio-group v-model="ruleForm2.gender">

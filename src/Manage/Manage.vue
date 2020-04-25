@@ -163,7 +163,7 @@
       var username=window.sessionStorage.getItem("username")
       var userId=window.sessionStorage.getItem("userId")
       var token=window.sessionStorage.getItem("token")
-      var param={userId:userId,pageIndex:1,pageSize:6,username:username}
+      var param={userId:userId,pageIndex:1,pageSize:9,username:username}
       axios.post(this.apiUrl+"/document/getALlDocuments",qs.stringify(param),
         {
           headers: {
@@ -187,6 +187,28 @@
 
     },
     methods:{
+     /* testData(){
+        var token=window.sessionStorage.getItem("token")
+        var params={"point":[{"x1":316.81,"y1":298.63,"x2":443.09,"y2":312.60},
+            {"x1":52.67,"y1":57.03,"x2":293.35,"y2":714.57},
+            {"x1":327.59,"y1":57.03,"x2":557.64,"y2":223.55},
+            {"x1":316.812,"y1":595.51,"x2":555.92,"y2":719.55},
+            {"x1":316.81,"y1":234.024,"x2":555.91,"y2":284.83},
+
+          ],"pageIndex":1,"userId":1,"docId":1}
+        console.log(params)
+        let url=this.apiUrl+"/points/savePointJSonFile"
+        axios.post(url,JSON.stringify(params),{
+          headers:{
+            'token':token
+          }
+        }).then((res)=>{
+          console.log(res);
+        }).catch((error)=>{
+            console.log(error)
+          }
+        )
+      },*/
       handleCurrentChange(currentPage){
         this.currentPage = currentPage;
         console.log(this.currentPage)  //点击第几页

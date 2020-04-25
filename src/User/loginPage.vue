@@ -20,7 +20,7 @@
     </el-form-item>
 <!--    <el-checkbox v-model="checked" checked class="remember" style="margin-bottom: 10px">记住密码</el-checkbox>-->
 <!--    <a href="/reg"  style="float: right;color: #3C8DBC;font-size: 14px;margin-bottom: 10px">注册</a>-->
-    <el-link type="primary" href="/reg" >注册</el-link>
+    <router-link to="/reg">注册</router-link>
     <el-form-item style="width:100%;">
 <!--      <el-button type="primary" style="width:100%;margin-top: 10px;" @click.native.prevent="handleSubmit2" :loading="logining">登录</el-button>-->
       <el-button type="primary" style="width:100%;margin-top: 10px;" @click.native.prevent="login" :loading="logining">登录</el-button>

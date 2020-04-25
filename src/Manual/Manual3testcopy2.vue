@@ -22,7 +22,6 @@
   import PDFJS from "pdfjs-dist";
   import pdfjsLib from "pdfjs-dist";
   import Canvas from '@/Manual/Manual3test_0102'
-  // const Base64 = require('js-base64').Base64
   export default {
     name: "ContractPreview",
     components: {Canvas},

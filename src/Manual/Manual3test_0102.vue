@@ -4,11 +4,14 @@
       <div  v-drag="{index:i-1}" :style="styleObj[i-1]" class="drag">
         <div v-cdrag="{index:i-1}"class="cdrag"></div>
         <div class="index">
-          <el-button type="success" style="height: 20px;width: 20px" @click="handelBlock(i)">
+          <el-button type="success"  style="height: 20px;width: 20px" @click="handelBlock(i)">
             <div class="order">{{i-1}}</div>
           </el-button>
         </div>
         <div  v-rdrag="{index:i-1}" class="rdrag"></div>
+        <div class="mark1">
+          <el-button type="warning" icon="el-icon-star-off" size="mini" circle @click="handelMark(i-1)"></el-button>
+        </div>
         <div v-fdrag="{index:i-1}" class="fdrag"></div>
         <div v-kdrag="{index:i-1}" class="kdrag"></div>
       </div>
@@ -23,9 +26,6 @@
     <div class="successButton">
       <el-button type="success"round  @click="successButton">提交</el-button>
     </div>
-    <!-- <div v-for="(item,index) in objectList">
-       {{item.bx+"  "+item.by+" "+item.rx+"  "+item.ry+" "+item.lx+"  "+item.ly+" "+item.kx+"  "+item.ky +"//" +index}}
-     </div>-->
   </div>
 </template>
 <style scoped>
@@ -47,6 +47,12 @@
     left: 220px;
     background-color: #99CCFF;
     opacity: 0.5;
+  }
+  .mark1{
+    left: 30%;
+    position: relative;
+    top: -50px;
+    font-weight:bold ;
   }
   .index{
     left: 50%;
@@ -215,7 +221,8 @@
           {width:'', height: '', position: 'absolute', top: '', left: '', opacity: 0.5, backgroundColor: '#99CCFF'}],
         url:'',
         len:'',
-        screenWidth:''
+        screenWidth:'',
+        tempWidth:''
       }
     },
     props:{
@@ -224,9 +231,54 @@
     methods:{
       successButton(){
         alert("确定提交吗")
-        console.log(this.objectList)
+        //要先确定屏幕大小
+        var paramList=[];
+        this.len=this.objectList.length;
+        console.log(this.screenWidth)
+        if(this.screenWidth<612){
+          for (let i = 0; i < this.len; i++) {
+            const object={
+              x1:this.objectList[i].bx ,
+              y1:this.objectList[i].by,
+              x2:this.objectList[i].kx,
+              y2:this.objectList[i].ky,
+              type:this.objectList[i].type
+            }
+            paramList.push(object)
+          }
+        }
+        else{
+          console.log(this.tempWidth)
+          for (let i = 0; i < this.len; i++) {
+            const object={
+              x1:this.objectList[i].bx - this.tempWidth,
+              y1:this.objectList[i].by,
+              x2:this.objectList[i].kx- this.tempWidth,
+              y2:this.objectList[i].ky,
+              type:this.objectList[i].type
+            }
+            paramList.push(object)
+          }
+        }
+        console.log(paramList)
+        var token=window.sessionStorage.getItem("token")
+        var userId=window.sessionStorage.getItem("userId")
+        var docId=window.sessionStorage.getItem("docId")
+        console.log(userId+"sss"+docId)
+        var params={point:paramList,pageIndex:this.num,userId:userId,docId:docId}
+        let url=this.apiUrl+"/points/savePointJSonFile"
+        axios.post(url,JSON.stringify(params),{
+          headers:{
+            'token':token
+          }
+        }).then((res)=>{
+          console.log(res);
+        }).catch((error)=>{
+            console.log(error)
+        }
+        )
       },
-      handelBlock(i){
+      handelBlock(i){   //处理每一块数据得到的信息
         console.log(i)
         var username=window.sessionStorage.getItem("username")
         var token=window.sessionStorage.getItem("token")
@@ -246,6 +298,10 @@
           this.$router.push({path:"/scroll",query:{docId:docId,username:username,pageId:pageId,pageIndex:pageIndex,blockOrder:i}})
         })
       },
+      handelMark(i){
+        console.log(i)
+      this.objectList[i].type=1
+      },
       handelAddIcon(){
         this.objectList.push({
           bx:200,by:50,
@@ -257,7 +313,7 @@
           Width:200,   //正方形区域宽的初始大小
           point:''})
       },
-      readerResult(){
+      readerResult(){    //每一页的全部解析数据
         var docId=window.sessionStorage.getItem("docId")
         console.log(this.num)
         var username=window.sessionStorage.getItem("username")
@@ -280,7 +336,7 @@
     computed:{
     },
     watch:{
-      num(oldValue,newValue){
+      num(oldValue,newValue){    //监测每一页num页数的变化
         console.log(oldValue+ "sss"+newValue)
         var docId=window.sessionStorage.getItem("docId")
         var username=window.sessionStorage.getItem("username")
@@ -296,13 +352,15 @@
           console.log(9999999)
           const datalist=res.data.data;
           window.sessionStorage.setItem("datalist",datalist)
-          this.objectList.splice(0,this.objectList.length)
+          this.objectList.splice(0,this.objectList.length) //删除和替换的功能都有，表示删除上一页的所有数据
           for(var i=0;i<datalist.length;i++){
             const object={
               bx:datalist[i].x1,by:datalist[i].y1,
               kx:datalist[i].x2,ky:datalist[i].y2
               ,rx:datalist[i].x2,ry:datalist[i].y1,
-              lx:datalist[i].x1,ly:datalist[i].y2,flag:false,
+              lx:datalist[i].x1,ly:datalist[i].y2,
+              flag:false,
+              type:datalist[i].type,
               Height:'',Width:'',point:''}
             this.objectList.push(object)
           }
@@ -310,7 +368,7 @@
           console.log(this.objectList.length)
           this.screenWidth=document.body.offsetWidth;
           console.log(this.screenWidth)
-          if(this.screenWidth<612){
+          if(this.screenWidth<612){   //解析是以612为宽度进行解析的
             var ratio=(this.screenWidth-17)/612.0;
             console.log(ratio)
             for(let i=0; i<this.len; i++){
@@ -327,15 +385,15 @@
             }
           }
           else {
-            var tempwidth = (this.screenWidth - 612) / 2.0
-            console.log(tempwidth)
+            this.tempWidth = (this.screenWidth - 612) / 2.0   //屏幕宽度比612长的一个差距
+            console.log(this.tempWidth)
             for (let i = 0; i < this.len; i++) {
               this.objectList[i].Height = this.objectList[i].ky - this.objectList[i].by
               this.objectList[i].Width = this.objectList[i].kx - this.objectList[i].bx
-              this.objectList[i].bx = this.objectList[i].bx + tempwidth
-              this.objectList[i].rx = this.objectList[i].rx + tempwidth
-              this.objectList[i].lx = this.objectList[i].lx + tempwidth
-              this.objectList[i].kx = this.objectList[i].kx + tempwidth
+              this.objectList[i].bx = this.objectList[i].bx + this.tempWidth
+              this.objectList[i].rx = this.objectList[i].rx + this.tempWidth
+              this.objectList[i].lx = this.objectList[i].lx + this.tempWidth
+              this.objectList[i].kx = this.objectList[i].kx + this.tempWidth
               this.styleObj[i].width = this.objectList[i].rx - this.objectList[i].bx + 'px'
               this.styleObj[i].height = this.objectList[i].ly - this.objectList[i].by + 'px'
               this.styleObj[i].left = this.objectList[i].bx + 'px'
@@ -370,7 +428,9 @@
             bx:datalist[i].x1,by:datalist[i].y1,
             kx:datalist[i].x2,ky:datalist[i].y2
             ,rx:datalist[i].x2,ry:datalist[i].y1,
-            lx:datalist[i].x1,ly:datalist[i].y2,flag:false,
+            lx:datalist[i].x1,ly:datalist[i].y2,
+            flag:false,
+            type:datalist[i].type,
             Height:'',Width:'',point:''}
           this.objectList.push(object)
         }
@@ -395,15 +455,15 @@
           }
         }
         else {
-          var tempwidth = (this.screenWidth - 612 - 17) / 2.0
-          console.log(tempwidth)
+          this.tempWidth = (this.screenWidth - 612 - 17) / 2.0
+          console.log(this.tempWidth)
           for (let i = 0; i < this.len; i++) {
             this.objectList[i].Height = this.objectList[i].ky - this.objectList[i].by
             this.objectList[i].Width = this.objectList[i].kx - this.objectList[i].bx
-            this.objectList[i].bx = this.objectList[i].bx + tempwidth
-            this.objectList[i].rx = this.objectList[i].rx + tempwidth
-            this.objectList[i].lx = this.objectList[i].lx + tempwidth
-            this.objectList[i].kx = this.objectList[i].kx + tempwidth
+            this.objectList[i].bx = this.objectList[i].bx + this.tempWidth
+            this.objectList[i].rx = this.objectList[i].rx + this.tempWidth
+            this.objectList[i].lx = this.objectList[i].lx + this.tempWidth
+            this.objectList[i].kx = this.objectList[i].kx + this.tempWidth
             this.styleObj[i].width = this.objectList[i].rx - this.objectList[i].bx + 'px'
             this.styleObj[i].height = this.objectList[i].ly - this.objectList[i].by + 'px'
             this.styleObj[i].left = this.objectList[i].bx + 'px'
@@ -419,7 +479,7 @@
 
     },
     directives:{
-      cdrag(el,binding,vnode){
+      cdrag(el,binding,vnode){    //左上角的点
         var i=binding.value.index
 //el为拖动的元素
         var oDiv =el;
@@ -430,7 +490,7 @@
           vnode.context.objectList[i].point=1;
         };
       },
-      rdrag(el,binding,vnode){
+      rdrag(el,binding,vnode){   //右上角的点
         var i=binding.value.index
         el.onmousedown=function (e) {
           e.preventDefault();
@@ -439,7 +499,7 @@
           vnode.context.objectList[i].point=2;
         }
       },
-      fdrag(el,binding,vnode){
+      fdrag(el,binding,vnode){    //左下角的点
         var i=binding.value.index
         el.onmousedown=function (e) {
           e.preventDefault()
@@ -448,7 +508,7 @@
           vnode.context.objectList[i].point=3;
         }
       },
-      kdrag(el,binding,vnode){
+      kdrag(el,binding,vnode){    //右下角的点
         var i=binding.value.index
         el.onmousedown=function (e) {
           e.preventDefault();
@@ -460,7 +520,7 @@
       },
       drag(el,binding,vnode){
         var index=binding.value.index
-        if(!vnode.context.objectList[index].flag) {
+        if(!vnode.context.objectList[index].flag) {  //表示拖动
           el.onmousedown = function (e) {
             var disx = e.pageX - el.offsetLeft;
             var disy = e.pageY - el.offsetTop;
@@ -484,7 +544,7 @@
               document.onmousemove = document.onmouseup = null;
             }
           }
-        }else if(vnode.context.objectList[index].flag && vnode.context.objectList[index].point==1){
+        }else if(vnode.context.objectList[index].flag && vnode.context.objectList[index].point==1){  //点击的是左上角
           document.onmousemove = function (e) {
             console.log("第一步执行")
             var x=e.pageX
@@ -510,7 +570,7 @@
             document.onmousemove = document.onmouseup = null;
           }
         }
-        else if(vnode.context.objectList[index].flag && vnode.context.objectList[index].point==2){
+        else if(vnode.context.objectList[index].flag && vnode.context.objectList[index].point==2){  //点击的是右上角
           document.onmousemove=function (e) {
             var x=e.pageX
             var y=e.pageY
@@ -565,7 +625,7 @@
             document.onmousemove = document.onmouseup = null;
           }
 
-        }else{
+        }else{     //右下角这个点
           document.onmousemove=function (e) {
             var x=e.pageX
             var y=e.pageY
