@@ -84,7 +84,7 @@
 
 <script>
   import axios from 'axios'
-  import Header from '@/components/Header'
+  import Header from '@/components/HeaderDemo'
   import Foot from '@/components/Foot'
 
   export default {
@@ -108,7 +108,7 @@
       }
     },
     methods: {
-        hreftwo () {
+      hreftwo () {
         this.$router.push({path: '/management'})
       },
       onchange(file,fileList){
@@ -130,8 +130,8 @@
             var token=window.sessionStorage.getItem("token");
             var username=window.sessionStorage.getItem("username");
             var userId=window.sessionStorage.getItem("userId");
-         //   var us=JSON.parse(user);
-         //   console.log(us.id);
+            //   var us=JSON.parse(user);
+            //   console.log(us.id);
             this.params.append("title",title);
             this.params.append("author",author);
             this.params.append("userId",userId);

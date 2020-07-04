@@ -1,7 +1,8 @@
 <template>
   <div class="loading">
     <div class="loading-img">
-      <i class="el-icon-loading" ></i>
+      <i class="el-icon-loading"></i>
+        <span>Loading</span>
     </div>
   </div>
 </template>

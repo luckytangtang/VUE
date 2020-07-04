@@ -101,7 +101,7 @@
     beforeCreate(){
    var docId=this.$route.query.docId;
    if(docId==null){
-     alert("请先给定论文信息");
+     alert("Please give the paper information first");
      this.$router.go(-1);
    }
     },

@@ -5,7 +5,7 @@ import IndexPage from '@/Main/IndexPage'
 import Manage from '@/Manage/Manage'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import locale from 'element-ui/lib/locale/lang/zh-CN'
+import locale from 'element-ui/lib/locale/lang/en'
 import Layout from '@/components/layout'
 import loginPage from '@/User/loginPage'
 import regPage from '@/User/regPage'
@@ -20,6 +20,12 @@ import Manual3test_1216 from '@/Manual/Manual3test_1216'
 import Manual3test_0102 from '@/Manual/Manual3test_0102'
 import AnalysisTest from '@/Manual/AnalysisTest'
 import ScrollTest from '@/Manual/ScrollTest'
+import ManualReader from '@/Manual/components/ManualReader'
+import IndexDemoPage from '@/Main/IndexDemoPage'
+import DempPaperList from '@/Manage/DemoPaperList'
+import AnalysisDemo from '@/Analysis/AnalysisDemo'
+import PaperList from '@/Manage/PaperList'
+import UserDemo from '@/User/UserDemo'
 Vue.prototype.apiUrl=apiUrl.apiUrl;
 require('./mock')
 Vue.use(ElementUI, {locale})
@@ -40,6 +46,14 @@ const router = new VueRouter({
       },
     },
     {
+      //首页
+      path: '/indexDemo',
+      component: IndexDemoPage,
+      meta: {
+        keepAlive: true
+      },
+    },
+    {
       //论文解析
       path: '/analysis',
       component: AnalysisSecond,
@@ -50,28 +64,58 @@ const router = new VueRouter({
       },
     },
     {
+      //首页
+      path: '/analysisDemo',
+      component: AnalysisDemo,
+      meta: {
+        keepAlive: true
+      },
+    },
+    {
       path:'/tpf',
-      component:Manual3test
+      component:Manual3test,
+      meta: {
+        keepAlive: true
+      },
     },
     {
       path:'/scroll',
-      component:ScrollTest
+      component:ScrollTest,
+      meta: {
+        keepAlive: true
+      },
     },
     {
       path:'/any',
-      component:AnalysisTest
+      component:AnalysisTest,
+      meta: {
+        keepAlive: true
+      },
     },
     {
       path:'/ltt',
-      component:Manual3testcopy
+      component:Manual3testcopy,
+    },
+    {
+      path:'/pdfReader',
+      component:ManualReader,
+      meta: {
+        keepAlive: true
+      },
     },
     {
       path:'/tess',
-      component:Manual3test_1216
+      component:Manual3test_1216,
+      meta: {
+        keepAlive: true
+      },
     },
     {
       path:'/c',
-      component: Manual3test_0102
+      component: Manual3test_0102,
+      meta: {
+        keepAlive: true
+      },
     },
     {
       //论文管理
@@ -79,10 +123,33 @@ const router = new VueRouter({
       component: Manage,
       meta: {
         keepAlive: true,
-        //needLogin:true,
-        requireAuth: true,
       },
     },
+    {
+      //论文管理
+      path: '/paperList',
+      component: PaperList,
+      meta: {
+        keepAlive: true,
+      },
+    },
+    {
+      //论文管理
+      path: '/demopaperList',
+      component: DempPaperList,
+      meta: {
+        keepAlive: true,
+      },
+    },
+    {
+      //个人中心
+      path: '/userdemo',
+      component: UserDemo,
+      meta: {
+        keepAlive: true
+      },
+    },
+
     {
       //个人中心
       path: '/user',

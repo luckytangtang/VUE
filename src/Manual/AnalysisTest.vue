@@ -4,7 +4,6 @@
 
 <script>
   import axios from 'axios';
-  import qs from  'Qs';
   export default {
     name: 'AnalysisTest',
     data(){
@@ -25,12 +24,15 @@
       ).then((res)=>{
      //   console.log(res.data)
         var pdfCss=sessionStorage.getItem("pdfCss")
+        var sct="<script type='text/javascript'>"+"window.addEventListener('popstate', function(e) {alert('返回')}, false);"+"<"+"/script>"
         var pdfHead="<html>\n" +
           "<head>\n" +
+         '<meta content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=0.5, user-scalable=no" name="viewport"> \n'+
           "<meta charset=\"utf-8\"> \n" +
           "<title>test</title>\n" +
-           pdfCss+"\n" +
-          "</head>\n" +
+          "<style type='text/css'>"+"img{height: auto; width: auto\\9; width:100%;}"+"</style>"+
+           pdfCss+sct+
+        "</head>\n" +
           "<body>"
          console.log(pdfHead)
         var url=pdfHead+res.data
@@ -42,7 +44,7 @@
         console.log(error);
       });
     },
-    created () {
+   created () {
       this.$nextTick(()=>{this.getLocal()})
     },
     mounted () {
@@ -50,6 +52,15 @@
       that.$nextTick(function () {
         window.addEventListener('scroll',that.handelScroll)
       })
+      if (window.history && window.history.pushState) {
+
+      //  history.pushState(null, null, document.URL);
+        window.addEventListener('popstate', this.goBack, false);
+      }
+    },
+
+   destroyed(){
+      window.removeEventListener('popstate', this.goBack, false);
     },
     methods:{
       getLocal(){
@@ -60,6 +71,12 @@
         if(blockOrder){
           toElement.scrollIntoView()
         }
+      },
+     goBack(){
+        console.log(2324544)
+        document.querySelector('meta[name="viewport"]').setAttribute('content','width=device-width,initial-scale=1.0'+ ',minimum-scale=1.0'+ ',maximum-scale=1.0' + ',user-scalable=no');
+     //   this.$router.replace({path: '/ltt'});
+        //replace替换原路由，作用是避免回退死循环
       }
     }
   }

@@ -3,10 +3,10 @@
     <!--<h1 align="center">PDF预览</h1>-->
     <canvas class="canvas"
             :id="'the-canvas'+num"
-            :key="num">
-    </canvas>
+            :key="num"></canvas>
     <Loading v-show="!flag"></Loading>
-    <Canvas v-show="flag" :num="num"></Canvas>
+    <ManualPoint v-show="flag" :num="num">
+    </ManualPoint>
     <div class="el-backtop paginateleft" >
       <i class="el-icon-arrow-left" @click="handelLastPage">
       </i>
@@ -21,13 +21,13 @@
 <script>
   import PDFJS from "pdfjs-dist";
   import pdfjsLib from "pdfjs-dist";
-  import Canvas from '@/Manual/Manual3test_0102'
+  import ManualPoint from '@/Manual/components/ManualPoint'
   import Loading from "@/components/Loading"
 
   // const Base64 = require('js-base64').Base64
   export default {
     name: "ContractPreview",
-    components: {Canvas,Loading},
+    components: {ManualPoint,Loading},
     data() {
       return {
         title: "PDF预览文件",
@@ -42,7 +42,7 @@
         this.num++;
         if(this.num>this.pages)
         {
-          alert("this is the last page")
+          alert("This is the last page")
           this.num--;
         }
         else{
@@ -53,7 +53,7 @@
       handelLastPage(){
         this.num--;
         if(this.num<1){
-          alert("this is the first page")
+          alert("This is the first page")
           this.num++
         }
         else {
@@ -67,7 +67,6 @@
       _renderPage(num) {
         this.pdfDoc.getPage(num).then(page => {
           let canvas = document.getElementById("the-canvas" + num);//// 得到canvas
-          console.log('页面')
           let ctx = canvas.getContext("2d");//// 得到canvas的上下文环境
           let dpr = window.devicePixelRatio || 1;  //设备像素比
           let bsr =
@@ -76,17 +75,14 @@
             ctx.msBackingStorePixelRatio ||
             ctx.oBackingStorePixelRatio ||
             ctx.backingStorePixelRatio || 1;
-     //    let ratio = dpr/bsr;
-         console.log(dpr+"  "+bsr)
-         console.log(ratio)
-          let ratio=1
+          let ratio = dpr / bsr;
           let viewport = page.getViewport(1);
           console.log(viewport)  //得到整个页面大小
           canvas.width = viewport.width * ratio;  //canvas.style.width是浏览器渲染canvas的尺寸，而canvas.width是canvas的画布大小
           canvas.height = viewport.height * ratio;
           canvas.style.width = viewport.width + "px";
           canvas.style.height = viewport.height + "px";
-          ctx.setTransform(ratio, 0,0 , ratio, 0, 0);
+          ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
           let renderContext = {
             canvasContext: ctx,
             viewport: viewport
@@ -95,13 +91,13 @@
         });
       },
       _loadFile(url) {
-        PDFJS.getDocument({url:url,rangeChunkSize:65536*16,disableAutoFetch:0}).then(pdf => {
+        PDFJS.getDocument(url).then(pdf => {
           this.pdfDoc = pdf;
           this.pages = this.pdfDoc.numPages;   //获得总页数
           if(this.pdfDoc!=null)
             this.flag=true;
           this.$nextTick(() => {
-            this._renderPage(this.num);
+            this._renderPage(1);
           });
         });
       }
@@ -110,7 +106,7 @@
       var docId=this.$route.query.docId;
       var username=this.$route.query.username
       console.log(docId+username)
-     let url=this.apiUrl+'/commonFile/getPdfFile?r=Math.random()&docId='+docId+"&username="+username
+     let url=this.apiUrl+'/commonFile/getPdfFile?docId='+docId+"&username="+username
      // let url=this.apiUrl+'/commonFile/getResetHtml?docId='+1+"&pageId="+1+"&pageIndex="+1
       this.initThePDFJSLIB();
       document.title = this.title;
@@ -123,15 +119,11 @@
 
   .paginateleft{
     top:50%;
-    left: 2%;
-    height: 10px;
-    width: 10px;
+    left: 8%;
   }
   .paginateright{
-    top:50%;
-    right: 2%;
-    height: 10px;
-    width: 10px;
+    top: 50%;
+    right: 8%;
   }
   .canvas {
     display: block;

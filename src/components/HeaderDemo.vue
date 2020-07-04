@@ -6,35 +6,22 @@
       <el-menu-item index="1">
         <a class="navbar-brand" href="#">Knowmap</a>
       </el-menu-item>
-      <el-menu-item index="2" style="padding-left: 1.5rem">
-        <router-link to="/index">HOME <span class="sr-only">(current)</span></router-link>
-      </el-menu-item>
-      <el-menu-item index="3" style="padding-left: 1.5rem">
-        <router-link to="/analysis">
-          ANALYSIS <span class="sr-only">(current)</span>
+
+      <el-menu-item index="4" aria-colspan="4" style="padding-left: 5.5rem">
+        <router-link to="/demopaperList">
+          LIST OF PARSED PAPERS <span class="sr-only">(current)</span>
         </router-link>
       </el-menu-item>
-      <el-menu-item index="4" style="padding-left: 1.5rem">
-        <router-link to="/management">
-          MANAGEEMENT <span class="sr-only">(current)</span>
-        </router-link>
-      </el-menu-item>
-      <el-menu-item index="5" style="padding-left: 1.5rem">
-        <router-link to="/manual">
-           ADJUSTMENT <span class="sr-only">(current)</span>
-        </router-link>
-      </el-menu-item>
+
       <el-submenu index="6"  class="nav navbar-nav navbar-right" style="" v-show="isLogin">
         <template slot="title">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-            {{username}} <span class="caret"></span>
-          </a>
+            {{username}}
         </template>
         <el-menu-item index="6-1">
-          <router-link to="/user">Personal</router-link>
+          <router-link to="/userdemo">Personal</router-link>
         </el-menu-item>
         <el-menu-item index="6-2">
-          <a @click="logout">EXIT</a>
+          <a @click="logout">Exit</a>
         </el-menu-item>
       </el-submenu>
     </el-menu>
@@ -48,7 +35,7 @@
 <script>
   import Logo from '@/assets/logo.png'
   export default {
-    name: 'Header.vue',
+    name: 'HeaderDemo.vue',
     data () {
       return {
         logo: Logo,

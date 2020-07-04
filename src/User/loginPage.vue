@@ -9,21 +9,23 @@
     </el-form-item>
     <h3 class="title" style="margin-bottom: 20px">Knowmap</h3>
     <el-form-item prop="username">
+      <b>Username</b>
       <el-input
-        type="text" v-model="ruleForm2.username" auto-complete="off" placeholder="请输入用户名" suffix-icon="fa fa-user"
+        type="text" v-model="ruleForm2.username" auto-complete="off" placeholder="Please enter your username" suffix-icon="fa fa-user"
       >
       </el-input>
     </el-form-item>
     <el-form-item prop="password">
-      <el-input type="password" v-model="ruleForm2.password" auto-complete="off" placeholder="请输入密码" suffix-icon="fa fa-keyboard-o"
+      <b>Password</b>
+      <el-input type="password" v-model="ruleForm2.password" auto-complete="off" placeholder="Please enter your password" suffix-icon="fa fa-keyboard-o"
       ></el-input>
     </el-form-item>
 <!--    <el-checkbox v-model="checked" checked class="remember" style="margin-bottom: 10px">记住密码</el-checkbox>-->
 <!--    <a href="/reg"  style="float: right;color: #3C8DBC;font-size: 14px;margin-bottom: 10px">注册</a>-->
-    <router-link to="/reg">注册</router-link>
+    <router-link to="/reg">Sign up</router-link>
     <el-form-item style="width:100%;">
 <!--      <el-button type="primary" style="width:100%;margin-top: 10px;" @click.native.prevent="handleSubmit2" :loading="logining">登录</el-button>-->
-      <el-button type="primary" style="width:100%;margin-top: 10px;" @click.native.prevent="login" :loading="logining">登录</el-button>
+      <el-button type="primary" style="width:100%;margin-top: 10px;" @click.native.prevent="login" :loading="logining">Sign in</el-button>
     </el-form-item>
   </el-form>
   </div>
@@ -70,7 +72,7 @@ import qs from 'Qs'
               console.log(map);
               if(map!=null) {
                 alert(res.data.serviceMessage);
-                console.log(map.username+"  //"+map.token);
+                console.log(map.username+"//"+map.token);
                 window.sessionStorage.setItem("token",map.token);
                 window.sessionStorage.setItem("username",map.username)
                 var param={username:map.username}
@@ -86,14 +88,19 @@ import qs from 'Qs'
                     window.sessionStorage.setItem("loginuser",window.JSON.stringify(record))
                     console.log(record.id);
                     window.sessionStorage.setItem("userId",record.id);
+                    if(map.username==="demo") {
+                      console.log(32)
+                      this.$router.push({path: '/demopaperList'})
+                    }
              //    console.log(JSON.parse(window.sessionStorage.getItem("user"))+1214)
+                  else
                     this.$router.push({path: '/index'});
                   }
                 )
 
               }
               else{
-                alert(res.data.message);
+              alert(res.data.message);
                 console.log(res.data);
               }
             }).catch(error=>{

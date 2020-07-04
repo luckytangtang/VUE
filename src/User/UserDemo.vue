@@ -69,7 +69,7 @@
 <script>
   import axios from 'axios'
   import qs from 'Qs'
-  import Header from '@/components/Header'
+  import Header from '@/components/HeaderDemo'
   export default {
     name:'User',
     components: {Header},

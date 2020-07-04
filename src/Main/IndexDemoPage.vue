@@ -72,8 +72,7 @@
         <div slot="header" class="clearfix">
           <span>INTELLIGENT ADAPTER</span>
         </div>
-        <div>
-          When we parse the paper, because there may be many formats of the paper, a single algorithm cannot parse all the papers. If some papers are not parsed accurately, the data of the parsed block will be incomplete or missing, which will greatly affect our reading experience.Therefore, when the data analysis of the paper is not accurate, we need to re-adjust the parsed paper block,
+        <div>When we parse the paper, because there may be many formats of the paper, a single algorithm cannot parse all the papers. If some papers are not parsed accurately, the data of the parsed block will be incomplete or missing, which will greatly affect our reading experience.Therefore, when the data analysis of the paper is not accurate, we need to re-adjust the parsed paper block,
           by adjusting the size of each area, so as to make the best analysis effect of the paper。Intelligent adaptation will enable us to get more accurate values of the paper data, and all the papers can get ideal results.
         </div>
       </el-card>
@@ -96,7 +95,7 @@
 </template>
 
 <script>
-  import Header from '@/components/Header'
+  import Header from '@/components/HeaderDemo'
   import Foot from '@/components/Foot'
   import Logo from '@/assets/logo.png'
   import jpg from '@/assets/slideShow/pic1.jpg'
@@ -140,11 +139,6 @@
     border-radius: 4px;
     margin-left: 30px;
   }
-  img{background-size:contain ,cover;
-
-    width:100%;
-
-    height: auto;}
   /*媒体查询*/
   /*屏幕宽度小于878px的时候执行里面的css*/
 

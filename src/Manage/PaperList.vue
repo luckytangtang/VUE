@@ -3,7 +3,7 @@
     <Header></Header>
     <div class="line" style="height: 20px"></div>
     <div class="demo-input-suffix">
-      <el-button size="small" class="delete" icon="el-icon-delete" round type="info">Rubbish station </el-button>
+      <el-button size="small" class="delete" icon="el-icon-delete" round type="info">Rubbish station</el-button>
       <el-input
         class="search"
         placeholder="Please enter the thesis keyword"
@@ -144,7 +144,7 @@
   }
 </style>
 <script>
-  import Header from '@/components/Header'
+  import Header from '@/components/HeaderDemo'
   import Loading from "@/components/Loading"
   import axios from 'axios';
   import qs from  'Qs';
@@ -170,7 +170,7 @@
       var userId=window.sessionStorage.getItem("userId")
       var token=window.sessionStorage.getItem("token")
       var param={userId:userId,pageIndex:1,pageSize:9,username:username}
-      axios.post(this.apiUrl+"/document/getALlDocuments",qs.stringify(param),
+      axios.post(this.apiUrl+"/document/getDemoDocuments",qs.stringify(param),
         {
           headers: {
             'token': token
@@ -193,28 +193,28 @@
 
     },
     methods:{
-     /* testData(){
-        var token=window.sessionStorage.getItem("token")
-        var params={"point":[{"x1":316.81,"y1":298.63,"x2":443.09,"y2":312.60},
-            {"x1":52.67,"y1":57.03,"x2":293.35,"y2":714.57},
-            {"x1":327.59,"y1":57.03,"x2":557.64,"y2":223.55},
-            {"x1":316.812,"y1":595.51,"x2":555.92,"y2":719.55},
-            {"x1":316.81,"y1":234.024,"x2":555.91,"y2":284.83},
+      /* testData(){
+         var token=window.sessionStorage.getItem("token")
+         var params={"point":[{"x1":316.81,"y1":298.63,"x2":443.09,"y2":312.60},
+             {"x1":52.67,"y1":57.03,"x2":293.35,"y2":714.57},
+             {"x1":327.59,"y1":57.03,"x2":557.64,"y2":223.55},
+             {"x1":316.812,"y1":595.51,"x2":555.92,"y2":719.55},
+             {"x1":316.81,"y1":234.024,"x2":555.91,"y2":284.83},
 
-          ],"pageIndex":1,"userId":1,"docId":1}
-        console.log(params)
-        let url=this.apiUrl+"/points/savePointJSonFile"
-        axios.post(url,JSON.stringify(params),{
-          headers:{
-            'token':token
-          }
-        }).then((res)=>{
-          console.log(res);
-        }).catch((error)=>{
-            console.log(error)
-          }
-        )
-      },*/
+           ],"pageIndex":1,"userId":1,"docId":1}
+         console.log(params)
+         let url=this.apiUrl+"/points/savePointJSonFile"
+         axios.post(url,JSON.stringify(params),{
+           headers:{
+             'token':token
+           }
+         }).then((res)=>{
+           console.log(res);
+         }).catch((error)=>{
+             console.log(error)
+           }
+         )
+       },*/
       handleCurrentChange(currentPage){
         this.currentPage = currentPage;
         console.log(this.currentPage)  //点击第几页
@@ -237,7 +237,7 @@
         var username=window.sessionStorage.getItem("username")
         window.sessionStorage.setItem("docId", id)
         this.$router.push({path:"/pdfReader",query:{docId:id,username:username}})
-     },
+      },
       downloadRow(id){
         console.log(id);
         var url=this.apiUrl+'/commonFile/getPdfFile';
@@ -261,12 +261,6 @@
         var status=0;//用这个判断是否解析成功
         var username=window.sessionStorage.getItem("username")
         var token=window.sessionStorage.getItem("token")
-        if(username==="jack"){
-          console.log("jack")
-          window.sessionStorage.setItem("docId", id)
-          this.$router.push({path: "/ltt", query: {docId: id, username: username}})
-        }
-         else{
         var statusurl=this.apiUrl+"/task/getTaskStatus"
         var params={docId:id,username:username}
         var timer= window.setInterval(function () {
@@ -277,6 +271,7 @@
               }
             }
           ).then(res=>{
+            console.log(res.data.data)
             var data=res.data.data.status;
             var task=res.data.data
             if(data==6)
@@ -293,7 +288,7 @@
             console.log("跳出")
             if(status==6) {
               console.log("开始获得CSS")
-              var url = _this.apiUrl+ "/commonFile/getCssFile";
+              var url = "http://148.70.210.242:8080"+ "/commonFile/getCssFile";
               console.log(url)
               axios.get(url + "?docId=" + id + "&username=" + username
               ).then((res) => {
@@ -310,12 +305,11 @@
               });
             }
             else if(status==4){
-              alert("Parse failure,the reason is:"+res.data.data.errorInfo)
+              alert("Parse failure,the reason is："+res.data.data.errorInfo)
               _this.isloading=false;
             }
           })
         }, 2000);
-        }
 
         /*  */
         //  parent.location.href=url+"?docId="+id+"&username="+username
